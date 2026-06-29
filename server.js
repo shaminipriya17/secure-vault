@@ -8,7 +8,7 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-// import mongoSanitize from "express-mongo-sanitize";   // Commented to fix crash
+// import mongoSanitize from "express-mongo-sanitize"; // Disabled to fix crash
 import rateLimit from "express-rate-limit";
 import { createLogger, format, transports } from "winston";
 
@@ -81,12 +81,6 @@ const app = express();
     app.use(express.json({ limit: "10kb" }));
     app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-    // mongoSanitize is causing crash - disabled for now
-    // app.use(mongoSanitize({
-    //   replaceWith: '_',
-    //   allowDots: true,
-    // }));
-
     if (process.env.NODE_ENV === "development") {
       app.use(morgan("dev"));
     } else {
@@ -113,6 +107,14 @@ const app = express();
         timestamp: new Date().toISOString(),
       });
     });
+
+    // Serve Vite frontend in production
+    if (process.env.NODE_ENV === "production") {
+      app.use(express.static("dist"));
+      app.get("*", (req, res) => {
+        res.sendFile("dist/index.html");
+      });
+    }
 
     const PORT = parseInt(process.env.PORT) || 5000;
 
