@@ -112,7 +112,7 @@ const app = express();
     if (process.env.NODE_ENV === "production") {
       app.use(express.static("dist"));
       app.get("*", (req, res) => {
-        res.sendFile("dist/index.html");
+        res.sendFile("dist/index.html", { root: process.cwd() });
       });
     }
 
