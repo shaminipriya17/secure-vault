@@ -8,7 +8,6 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-// import mongoSanitize from "express-mongo-sanitize"; // Disabled to fix crash
 import rateLimit from "express-rate-limit";
 import { createLogger, format, transports } from "winston";
 
@@ -107,14 +106,6 @@ const app = express();
         timestamp: new Date().toISOString(),
       });
     });
-
-    // Serve Vite frontend in production
-    if (process.env.NODE_ENV === "production") {
-      app.use(express.static("dist"));
-      app.get("*", (req, res) => {
-        res.sendFile("dist/index.html", { root: process.cwd() });
-      });
-    }
 
     const PORT = parseInt(process.env.PORT) || 5000;
 
