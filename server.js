@@ -80,7 +80,12 @@ const app = express();
 
     app.use(express.json({ limit: "10kb" }));
     app.use(express.urlencoded({ extended: true, limit: "10kb" }));
-    app.use(mongoSanitize());
+
+    // Fixed mongo-sanitize
+    app.use(mongoSanitize({
+      replaceWith: '_',
+      allowDots: true,
+    }));
 
     if (process.env.NODE_ENV === "development") {
       app.use(morgan("dev"));
@@ -123,3 +128,5 @@ const app = express();
     process.exit(1);
   }
 })();
+
+export default app;
