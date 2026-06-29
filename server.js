@@ -8,7 +8,7 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-import mongoSanitize from "express-mongo-sanitize";
+// import mongoSanitize from "express-mongo-sanitize";   // Commented to fix crash
 import rateLimit from "express-rate-limit";
 import { createLogger, format, transports } from "winston";
 
@@ -81,11 +81,11 @@ const app = express();
     app.use(express.json({ limit: "10kb" }));
     app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-    // Fixed mongo-sanitize
-    app.use(mongoSanitize({
-      replaceWith: '_',
-      allowDots: true,
-    }));
+    // mongoSanitize is causing crash - disabled for now
+    // app.use(mongoSanitize({
+    //   replaceWith: '_',
+    //   allowDots: true,
+    // }));
 
     if (process.env.NODE_ENV === "development") {
       app.use(morgan("dev"));
